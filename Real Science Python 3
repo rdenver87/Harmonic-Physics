@@ -1,0 +1,74 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import itertools
+
+# Define sets A and B
+A = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+B = np.array([2, 6, 7, 8, 10, 12, 14, 16, 20])
+
+# Compute set C using a vectorized operation
+C = np.sqrt(A**2 + B**2)
+
+# Compute sin(A+B), sin(A+C), and sin(B+C) for each pair of numbers in A and B
+result1 = np.sin(A + B)
+result2 = np.sin(A + C)
+result3 = np.sin(B + C)
+
+# Define the angles for the radar chart
+angles = np.linspace(0, 2*np.pi, len(result1), endpoint=False)
+
+# Repeat the first value to close the circle
+result1 = np.concatenate((result1, [result1[0]]))
+result2 = np.concatenate((result2, [result2[0]]))
+result3 = np.concatenate((result3, [result3[0]]))
+
+# Repeat the angles to close the circle
+angles = np.concatenate((angles, [angles[0]]))
+
+# Create a figure with three subplots
+fig, axs = plt.subplots(nrows=1, ncols=3, subplot_kw=dict(polar=True), figsize=(8.2, 3.6), dpi=100)
+
+# Set the background color of the radar chart
+fig.patch.set_facecolor('black')
+for ax in axs:
+    ax.set_facecolor((0, 0, 0))
+
+# Plot the values for each subplot
+axs[0].plot(angles, result1, color=(0, 1, 0), linewidth=1)
+axs[0].fill(angles, result1, color=(0, 1, 0), alpha=0.5)
+axs[0].set_theta_direction(-1)
+axs[0].set_theta_zero_location("N")
+axs[0].set_title([])
+axs[0].axis(False)
+axs[0].set_ylim([np.min(result1) - 0.1, np.max(result1) + 0.1])
+
+axs[1].plot(angles, result2, color=(0, 1, 0), linewidth=1)
+axs[1].fill(angles, result2, color=(0, 1, 0), alpha=0.5)
+axs[1].set_theta_direction(-1)
+axs[1].set_theta_zero_location("N")
+axs[1].set_title([])
+axs[1].axis(False)
+axs[1].set_ylim([np.min(result2) - 0.1, np.max(result2) + 0.1])
+
+axs[2].plot(angles, result3, color=(0, 1, 0), linewidth=1)
+axs[2].fill(angles, result3, color=(0, 1, 0), alpha=0.5)
+axs[2].set_theta_direction(-1)
+axs[2].set_theta_zero_location("N")
+axs[2].set_title([])
+axs[2].axis(False)
+axs[2].set_ylim([np.min(result3) - 0.1, np.max(result3) + 0.1])
+
+# Remove the axis and radius labels
+for ax in axs:
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+
+# Set the color of the tick labels
+for ax in axs:
+    ax.tick_params(colors='white')
+
+# Save the plot to a high-quality JPEG image with the specified size
+plt.savefig('radar_chart.jpg', dpi=100, bbox_inches='tight', format='jpg')
+
+# Show the plot (optional, you can comment this out if you don't need to display it)
+plt.show()
