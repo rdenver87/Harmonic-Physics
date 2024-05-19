@@ -4,7 +4,7 @@ Development in progress...
 Welcome to real science, energy physics from real numbers! 
 Harmonic physics through The Periodic Table of Elements! 
 
-The generator spreadsheet is a work in progress, the current first version is a hybrid of the original number set {2, 6, 7, 8, 10, 12, 14, 16, 20} and combinational sine possibilities applicable to the analysis of all elements. 
+The generator spreadsheet is a work in progress, the current first version is a hybrid of the original number set{2, 6, 7, 8, 10, 12, 14, 16, 20} and combinational sine possibilities applicable to the analysis of all elements. 
 
 The generator is locked by default and completely unlockable to be edited and developed further by anyone! 
 
