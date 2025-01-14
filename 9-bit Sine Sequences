@@ -1,0 +1,50 @@
+import numpy as np
+import sounddevice as sd
+
+# Define constants
+SAMPLE_RATE = 44100  # Standard audio sample rate in Hz
+DURATION = 5  # Duration of each sound in seconds
+BASE_FREQUENCY = 432  # Base frequency in Hz for the sine wave (A4 note)
+
+# Define sets A and B
+A = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+B = np.array([2, 6, 7, 8, 10, 12, 14, 16, 20])
+
+# Compute set C using a vectorized operation
+C = np.sqrt(A**2 + B**2)
+
+# Function to generate a sine wave based on the input values
+def create_wave(values, base_freq):
+    t = np.linspace(0, DURATION, int(SAMPLE_RATE * DURATION), endpoint=False)  # Time array
+    frequencies = base_freq + values * 10  # Modulate base frequency with values
+    wave = np.sin(2 * np.pi * frequencies[:, None] * t).sum(axis=0)  # Combine all waves
+    return wave / np.max(np.abs(wave))  # Normalize the wave
+
+# Quantize the audio signal to 9-bit resolution
+def quantize_to_9bit(signal):
+    signal_scaled = np.round(signal * 255)  # Scale signal from -1 to 1 to -256 to 255 (9-bit range)
+    signal_9bit = np.clip(signal_scaled, -256, 255)  # Ensure within 9-bit range
+    return signal_9bit / 255  # Scale back to -1 to 1 for playback
+
+# Generate sine waves for A, B, and C combinations
+wave_ab = create_wave(A + B, BASE_FREQUENCY)  # sine(A + B)
+wave_ac = create_wave(A + C, BASE_FREQUENCY)  # sine(A + C)
+wave_bc = create_wave(B + C, BASE_FREQUENCY)  # sine(B + C)
+
+# Quantize to 9-bit
+wave_ab_9bit = quantize_to_9bit(wave_ab)
+wave_ac_9bit = quantize_to_9bit(wave_ac)
+wave_bc_9bit = quantize_to_9bit(wave_bc)
+
+# Play the quantized sounds
+print("Playing 9-bit wave for sine(A + B)...")
+sd.play(wave_ab_9bit, samplerate=SAMPLE_RATE)
+sd.wait()
+
+print("Playing 9-bit wave for sine(A + C)...")
+sd.play(wave_ac_9bit, samplerate=SAMPLE_RATE)
+sd.wait()
+
+print("Playing 9-bit wave for sine(B + C)...")
+sd.play(wave_bc_9bit, samplerate=SAMPLE_RATE)
+sd.wait()
